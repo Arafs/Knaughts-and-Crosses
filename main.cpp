@@ -77,8 +77,8 @@ void VMstart(int command){
             default:
                 cout << "You have not entered a correct option" << endl;
                 system("pause");
-                break;
                 return;
+                break;
         }
 }
 
