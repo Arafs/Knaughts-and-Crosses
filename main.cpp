@@ -12,7 +12,7 @@ int pc=0;
 int operand;
 int acc;
 int opcode;
-int memory;
+int Memory_data_register;
 int command;
 int Programcounter=0;
 //Virtual Machine Functions
@@ -74,12 +74,11 @@ void VMstart(int command){
             case 5:
                 documentation();
                 break;
-            default:
-                cout << "You have not entered a correct option" << endl;
-                system("pause");
-                break;
-                return;
         }
+        cout << "You have not entered a correct option program is exiting" << endl;
+        exit(EXIT_FAILURE);
+        system("pause");
+        return;
 }
 
 void run () {
@@ -91,7 +90,7 @@ void run () {
             if (opcode==HALT||opcode==QUIT)
             {
                 cout << "Value of Accumulator is: " << acc << endl;
-                if (memory != 0){cout << "Value of memory is: " << memory << endl;}
+                if (Memory_data_register != 0){cout << "Value of memory is: " << Memory_data_register << endl;}
                 cout << "We are halting or quitting the virtual machine....." << endl;
                 system("pause");
                 return;
@@ -141,7 +140,7 @@ void execute(int opcode)
                 pc++;
                 break;
         case STORE:
-                memory += acc;
+                Memory_data_register += acc; //
                 pc++;
                 break;
         case HALT:
@@ -282,6 +281,6 @@ void documentation()
     cout << "HELP" << endl << endl;
     cout << "1) IF The result of the vm is different from the result I did manually." << endl;
     cout << "   --------" << "Make sure the commands that you type in your text file are proper commands" << endl << endl;
-    cout << "Commands Available: CLR QUIT RUN BNZ JMP HALT OUT MUL DIV SUB ADD" << endl;
+    cout << "Commands Available: CLR QUIT RUN BNZ JMP HALT OUT MUL DIV SUB ADD STORE" << endl;
     system("pause");
 }
