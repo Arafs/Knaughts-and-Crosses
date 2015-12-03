@@ -12,7 +12,7 @@ int pc=0;
 int operand;
 int acc;
 int opcode;
-int Memory_data_register;
+int Memory_data_register = 0;
 int command;
 int Programcounter=0;
 //Virtual Machine Functions
@@ -35,7 +35,7 @@ const int OUTPUT = 6;
 const int HALT = 0xFF;  // HEX opcode to hlt cpu 244
 const int JMP = 7;      // pc = jmp's operand
 const int BNZ = 8;      // Branch Not Zero  operand . if (acc != 0) pc = operand
-const int STORE = 9;
+const int STORES = 9;
 const int RUN = 10;
 const int QUIT = 11;
 //Our Ram with certain amounts of data;
@@ -74,11 +74,12 @@ void VMstart(int command){
             case 5:
                 documentation();
                 break;
+            default:
+                cout << "Virtual Machine Exiting, Fatal error" << endl;
+                exit(EXIT_FAILURE);
+                system("pause");
+                break;
         }
-        cout << "You have not entered a correct option program is exiting" << endl;
-        exit(EXIT_FAILURE);
-        system("pause");
-        return;
 }
 
 void run () {
@@ -87,7 +88,7 @@ void run () {
         {
             opcode = RAM[pc]; //Grab the current opcode, starting from the beginning of our RAM.
             execute(opcode);
-            if (opcode==HALT||opcode==QUIT)
+            if (opcode==HALT || opcode==QUIT)
             {
                 cout << "Value of Accumulator is: " << acc << endl;
                 if (Memory_data_register != 0){cout << "Value of memory is: " << Memory_data_register << endl;}
@@ -102,10 +103,6 @@ void execute(int opcode)
 {
     switch (opcode) //Our opcode to determine what to do with each command inside of our RAM
     {
-        case CLR:
-                acc = 0;
-                pc++;
-                break;
         case ADD:
                 operand = RAM[++pc];
                 acc += operand;
@@ -121,15 +118,19 @@ void execute(int opcode)
                 acc *= operand;
                 pc++;
                 break;
-        case DIV:
-                operand = RAM[++pc];
-                acc /= operand;
-                pc++;
-                break;
         case BNZ:
                 operand = RAM[++pc];
                 if ( acc != 0 ) pc = operand;
                 else pc++;
+                break;
+        case CLR:
+                acc = 0;
+                pc++;
+                break;
+        case DIV:
+                operand = RAM[++pc];
+                if (operand != 0) { acc /= operand; }else{ acc = 0; }
+                pc++;
                 break;
         case JMP:
                 operand = RAM[++pc];
@@ -139,7 +140,7 @@ void execute(int opcode)
                 cout << "The content of the accumulator is: " << acc << endl;
                 pc++;
                 break;
-        case STORE:
+        case STORES:
                 Memory_data_register += acc; //
                 pc++;
                 break;
@@ -207,6 +208,10 @@ void load()
         else if(word=="BNZ")
         {
             RAM[i]=BNZ;
+        }
+        else if(word=="STORE")
+        {
+            RAM[i]=STORES;
         }
         else if(word=="RUN")
         {
