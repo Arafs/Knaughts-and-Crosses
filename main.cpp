@@ -141,7 +141,7 @@ void execute(int opcode)
                 pc++;
                 break;
         case STORES:
-                Memory_data_register += acc; //
+                Memory_data_register = acc; //
                 pc++;
                 break;
         case HALT:
